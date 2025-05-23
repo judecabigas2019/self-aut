@@ -10,7 +10,7 @@ services:
     dockerfilePath: ./Dockerfile
 
     envVars:
-      # Enable basic auth for security
+      # ✅ Basic Auth for security (change these!)
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
@@ -18,7 +18,11 @@ services:
       - key: N8N_BASIC_AUTH_PASSWORD
         value: "supersecurepass123"
 
-      # Proper DB settings using manually created credentials
+      # ✅ Correct webhook base URL (fixes localhost problem)
+      - key: WEBHOOK_URL
+        value: "https://n8ntest-x0mn.onrender.com/"
+
+      # ✅ PostgreSQL database settings (from your Render DB)
       - key: DB_TYPE
         value: postgres
       - key: DB_POSTGRESDB_HOST
@@ -32,15 +36,7 @@ services:
       - key: DB_POSTGRESDB_PASSWORD
         value: WEW1H5B7hzfaL1BNhofQ6kwSmNa7dWEo
 
-      # Webhook configuration
-      - key: N8N_HOST
-        value: "0.0.0.0"
-      - key: N8N_PORT
-        value: "5678"
-      - key: WEBHOOK_URL
-        value: "https://n8ntest-x0mn.onrender.com/"
-
-      # Optional timezone for cleaner logs
+      # Optional timezone for logs and workflows
       - key: GENERIC_TIMEZONE
         value: Asia/Manila
 
