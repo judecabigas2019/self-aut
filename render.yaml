@@ -2,54 +2,49 @@ services:
   - type: web
     name: n8n
     env: docker
-    region: singapore # <— Updated to Singapore (if supported by Render)
+    region: singapore
     plan: standard
     branch: main
     numInstances: 1
     healthCheckPath: /
+    dockerfilePath: ./Dockerfile
+
     envVars:
-      # n8n authentication
+      # Enable basic auth for security
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
         value: "n8njude"
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: "supersecurepass123" # Change to your own
-      # n8n network/webhook config
+        value: "supersecurepass123"
+
+      # Proper DB settings using manually created credentials
+      - key: DB_TYPE
+        value: postgres
+      - key: DB_POSTGRESDB_HOST
+        value: dpg-d0nd4opr0fns738t89ng-a.singapore-postgres.render.com
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n_db_boeo
+      - key: DB_POSTGRESDB_USER
+        value: n8njude
+      - key: DB_POSTGRESDB_PASSWORD
+        value: WEW1H5B7hzfaL1BNhofQ6kwSmNa7dWEo
+
+      # Webhook configuration
       - key: N8N_HOST
-        value: "n8ntest-x0mn.onrender.com"
-      - key: WEBHOOK_URL
-        value: "https://n8ntest-x0mn.onrender.com/"
+        value: "0.0.0.0"
       - key: N8N_PORT
         value: "5678"
-      # PostgreSQL credentials from Render-managed DB
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_HOST
-        fromDatabase:
-          name: n8nDB
-          property: host
-      - key: DB_POSTGRESDB_DATABASE
-        fromDatabase:
-          name: n8nDB
-          property: database
-      - key: DB_POSTGRESDB_PORT
-        fromDatabase:
-          name: n8nDB
-          property: port
-      - key: DB_POSTGRESDB_USER
-        fromDatabase:
-          name: n8nDB
-          property: user
-      - key: DB_POSTGRESDB_PASSWORD
-        fromDatabase:
-          name: n8nDB
-          property: password
+      - key: WEBHOOK_URL
+        value: "https://n8ntest-x0mn.onrender.com/"
+
+      # Optional timezone for cleaner logs
+      - key: GENERIC_TIMEZONE
+        value: Asia/Manila
+
     disk:
       name: n8nDisk
       mountPath: /home/node/.n8n
       sizeGB: 10
-
-databases:
-  - name: n8nDB
-    plan: starter
